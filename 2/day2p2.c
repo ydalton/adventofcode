@@ -1,23 +1,40 @@
 /*
  * ydalton (c) 2022
  *
+ * answer was 15702
  */
 #include "day2.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-
 int getScore(enum Tool t, enum State s) {
-    printf("tool: %d. state: %d. answer: %d\n", t, s, t + s*3);
-    return t + s*3;
+    enum Tool myDraw;
+    switch(s) {
+        case LOSE:
+            if(t > 1)
+                myDraw = t - 1;
+            else
+                myDraw = SCISSORS;
+            break;
+        case DRAW:
+            myDraw = t;
+            break;
+        case WIN:
+            if(t < 3)
+                myDraw = t + 1;
+            else
+                myDraw = ROCK;
+            break;
+    }
+    return myDraw + (s*3);
 }
 
 int main() {
     enum Tool tool;
     enum State state;
 
-    /* error handling */
     FILE *fp = fopen("input.txt", "rb");
+    /* error handling */
     if(!fp) {
         perror("Error: unable to open file!");
         return -1;
@@ -27,7 +44,8 @@ int main() {
     unsigned int number = 0;
     unsigned int score = 0;
 
-    /* as long as character is not the end of file character */
+    /* my fucking dumbass did not realize 'tool' referred
+     * to the enemy's draw, and not my draw. */
     while(c != EOF) {
         switch(c) {
             case 'A':
