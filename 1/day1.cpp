@@ -1,3 +1,4 @@
+#include "../aoc.h"
 #include <bits/stdc++.h>
 #include <fstream>
 #include <iostream>
@@ -5,8 +6,8 @@
 
 int main() {
     std::string line;
-    std::ifstream input("input.txt");
     std::vector<int> totals;
+    std::ifstream input(INPUT_FILE);
     if (!input.is_open()) {
         std::cerr << "Unable to open file!\n";
         return -1;

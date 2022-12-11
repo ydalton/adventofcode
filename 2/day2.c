@@ -2,48 +2,80 @@
  * ydalton (c) 2022
  */
 
+#include "../adventofcode.h"
 #include "day2.h"
 #include <stdio.h>
 #include <stdlib.h>
 
-unsigned int number = 0;
 
-int getScore(enum Tool t1, enum Tool t2) {
-    int s1 = t1 + 1;      /* opponent's score */
-    int s2 = t2 + 1;      /* my score */
+int getScore(
+#ifndef PART_TWO
+             enum Tool t1,
+             enum Tool t2) {
     /* check whether two of the same tools were drawn, in other words a draw. */
-    if(s1 == s2)
-        return s2 + 3;
+    if(t1 == t2)
+        return t2 + 3;
     /*
      * if the difference between the two is 1, then take
      * the larger of the two, if the difference between
      * the two is 2, then take the smaller of the two
      */
-    if((abs(s1 - s2) == 1 && s1 < s2) ||
-       (abs(s1 - s2) == 2 && s1 > s2))
-        return s2 + 6;
+    if((abs(t1 - t2) == 1 && t1 < t2) ||
+       (abs(t1 - t2) == 2 && t1 > t2))
+        return t2 + 6;
     else
-        return s2 + 0;
+        return t2 + 0;
     return 0;
+#else
+             enum Tool t, enum State s) {
+    enum Tool myDraw;
+    switch(s) {
+        case LOSE:
+            if(t > 1)
+                myDraw = t - 1;
+            else
+                myDraw = SCISSORS;
+            break;
+        case DRAW:
+            myDraw = t;
+            break;
+        case WIN:
+            if(t < 3)
+                myDraw = t + 1;
+            else
+                myDraw = ROCK;
+            break;
+    }
+    return myDraw + (s*3);
+#endif
 }
 
 int main() {
+#ifndef PART_TWO
     enum Tool tool1, tool2;
+#else
+    enum Tool tool;
+    enum State state;
+#endif
 
     /* error handling */
-    FILE *fp = fopen("input.txt", "rb");
+    FILE *fp = fopen(INPUT_FILE, "rb");
     if(!fp) {
-        perror("Error: unable to open file!");
+        perror("Error: unable to open file");
         return -1;
     }
 
     char c = fgetc(fp);
     unsigned int score = 0;
+    unsigned int number = 0;
+#ifndef PART_TWO
     enum Tool* p_tool = &tool2;
+#endif
 
     /* as long as character is not the end of file character */
     while(c != EOF) {
         switch(c) {
+#ifndef PART_TWO
             case 'A':
             case 'B':
             case 'C':
@@ -70,8 +102,36 @@ int main() {
                 *p_tool = SCISSORS;
                 break;
             default: break;
+#else
+            case 'A':
+                tool = ROCK;
+                break;
+            case 'B':
+                tool = PAPER;
+                break;
+            case 'C':
+                tool = SCISSORS;
+                break;
+            case 'X':
+                state = LOSE;
+                break;
+            case 'Y':
+                state = DRAW;
+                break;
+            case 'Z':
+                state = WIN;
+                break;
+            default: break;
+#endif
         }
-        if (number % 4 == 3) score += getScore(tool1, tool2);
+        if (number % 4 == 3)
+            score += getScore(
+            #ifndef PART_TWO
+                tool1, tool2
+            #else
+                tool, state
+            #endif
+            );
         number++;
         c = fgetc(fp);
     }

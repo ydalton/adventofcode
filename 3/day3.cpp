@@ -1,3 +1,4 @@
+#include "../aoc.h"
 #include <bits/stdc++.h>
 #include <fstream>
 #include <iostream>
@@ -33,7 +34,7 @@ int main() {
     std::vector<char> chars;
     int total_priority = 0;
 
-    std::ifstream file("input.txt");
+    std::ifstream file(INPUT_FILE);
     // error handling
     if(!file.is_open()) {
         std::cerr << "error: file could not be opened!\n";

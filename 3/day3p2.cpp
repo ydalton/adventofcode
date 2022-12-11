@@ -6,16 +6,22 @@
 int compare_strings(std::vector<char> *cmp, std::string s1,
                     std::string s2, std::string s3) {
     std::vector<char> cl;       // common letters
-    for(unsigned int i = 0; i < s1.length(); i++) {
-        for(unsigned int j = 0; j < s2.length(); j++) {
-            for(unsigned int k = 0; k < s3.length(); k++) {
-                if(s1[i] == s2[j] == s3[k] &&
-                   std::find(cl.begin(), cl.end(), s1[i]) == cl.end()) {
-                    cl.push_back(s1[i]);
-                }
-            }
+    unsigned int i,j,k;
+    i = j = k = 0;
+    while(s1[i] != s2[j] != s3[k]) {
+        k++;
+        if(k >= s3.length() - 1) {
+            j++;
+            k = 0;
+        } else if(!(j % s2.length())) {
+            i++;
+            j = 0;
+        } else if(!(i % s1.length())) {
+            return -1;
         }
+        std::cout << k << '\n';
     }
+    cl.push_back(s1[i]);
     *cmp = cl;
     return 0;
 }
@@ -33,7 +39,7 @@ int main() {
     std::vector<char> chars;
     int total_priority = 0;
 
-    std::ifstream file("input.txt");
+    std::ifstream file("test.txt");
     // error handling
     if(!file.is_open()) {
         std::cerr << "error: file could not be opened!\n";
