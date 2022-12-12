@@ -1,6 +1,3 @@
-/*
- *
- */
 #include "../aoc.h"
 #include <iostream>
 #include <fstream>
