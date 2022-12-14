@@ -79,8 +79,6 @@ void paste_to_stack(std::vector<std::string> *p_map, unsigned int mbr, std::stri
     return;
 }
 
-void move_crate();
-
 /* after the preamble, parse the instructions and put them into a struct. */
 struct Instruction parse_instruction(std::string *p_line) {
     struct Instruction instr;
