@@ -1,12 +1,8 @@
-/*
- * ydalton (c) 2022
- */
-
 #include "../aoc.h"
+
 #include "day2.h"
 #include <stdio.h>
 #include <stdlib.h>
-
 
 int getScore(
 #ifndef PART_TWO
@@ -51,67 +47,51 @@ int getScore(
 }
 
 int main() {
-#ifndef PART_TWO
-    enum Tool tool1, tool2;
-#else
-    enum Tool tool;
-    enum State state;
-#endif
-
-    /* error handling */
-    FILE *fp = fopen(INPUT_FILE, "rb");
+    char *line = (char *) malloc(16);
+    FILE *fp = fopen(INPUT_FILE, "r");
     if(!fp) {
         perror("Error: unable to open file");
         return -1;
     }
 
-    char c = fgetc(fp);
     unsigned int score = 0;
-    unsigned int number = 0;
-#ifndef PART_TWO
-    enum Tool* p_tool = &tool2;
-#endif
 
-    /* as long as character is not the end of file character */
-    while(c != EOF) {
-        switch(c) {
+    char draw1, draw2;
+    enum Tool myDraw;
 #ifndef PART_TWO
-            case 'A':
-            case 'B':
-            case 'C':
-                p_tool = &tool1;
-                break;
-            case 'X':
-            case 'Y':
-            case 'Z':
-                p_tool = &tool2;
-                break;
-            default: break;
-        }
-        switch(c) {
-            case 'A':
-            case 'X':
-                *p_tool = ROCK;
-                break;
-            case 'B':
-            case 'Y':
-                *p_tool = PAPER;
-                break;
-            case 'C':
-            case 'Z':
-                *p_tool = SCISSORS;
-                break;
-            default: break;
+    enum Tool theirDraw;
 #else
+    enum State state;
+#endif
+    while(fgets(line, 16, fp)) {
+        sscanf(line, "%c %c", &draw1, &draw2);
+        /* printf("%c %c\n", draw1, draw2); */
+        switch(draw1) {
             case 'A':
-                tool = ROCK;
+                myDraw = ROCK;
                 break;
             case 'B':
-                tool = PAPER;
+                myDraw = PAPER;
                 break;
             case 'C':
-                tool = SCISSORS;
+                myDraw = SCISSORS;
                 break;
+            default:
+                fprintf(stderr, "Error!\n");
+                return -1;
+        }
+        switch(draw2) {
+#ifndef PART_TWO
+            case 'X':
+                theirDraw = ROCK;
+                break;
+            case 'Y':
+                theirDraw = PAPER;
+                break;
+            case 'Z':
+                theirDraw = SCISSORS;
+                break;
+#else
             case 'X':
                 state = LOSE;
                 break;
@@ -121,22 +101,19 @@ int main() {
             case 'Z':
                 state = WIN;
                 break;
-            default: break;
 #endif
+            default:
+                fprintf(stderr, "Error!\n");
+                return -1;
         }
-        if (number % 4 == 3)
-            score += getScore(
-            #ifndef PART_TWO
-                tool1, tool2
-            #else
-                tool, state
-            #endif
-            );
-        number++;
-        c = fgetc(fp);
+        score += getScore(
+#ifndef PART_TWO
+            myDraw, theirDraw
+#else
+            myDraw, state
+#endif
+);
     }
-    fclose(fp);
-    printf("%d\n", score);
+    printf("%u\n", score);
     return 0;
 }
-
