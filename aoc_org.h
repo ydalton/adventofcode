@@ -1,5 +1,5 @@
-#ifndef ADVENTOFCODE_H_
-#define ADVENTOFCODE_H_
+#ifndef AOC_ORG_H_
+#define AOC_ORG_H_
 
 #ifndef TEST_ATTEMPT
 # define INPUT_FILE "input.txt"
@@ -7,4 +7,4 @@
 # define INPUT_FILE "test.txt"
 #endif
 
-#endif // ADVENTOFCODE_H_
+#endif // AOC_ORG_H_
